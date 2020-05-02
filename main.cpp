@@ -37,45 +37,45 @@ int main()
 	rapidjson::Document d;
 	d.ParseInsitu( (char*)loader.data() );
 
-	PR_ASSERT( d.HasParseError() == false, "" );
-	PR_ASSERT( d.HasMember( "type" ), "" );
+	PR_ASSERT( d.HasParseError() == false );
+	PR_ASSERT( d.HasMember( "type" ) );
 
 	const rapidjson::Value& objectType = d["type"];
-	PR_ASSERT( objectType.IsString(), "" );
+	PR_ASSERT( objectType.IsString() );
 
 	Polygon polygon;
 
 	if ( objectType == "Polygon" )
 	{
-		PR_ASSERT( d.HasMember( "xform" ), "" );
+		PR_ASSERT( d.HasMember( "xform" ) );
 		{
 			const rapidjson::Value& xform = d["xform"];
-			PR_ASSERT( xform.IsArray(), "" );
-			PR_ASSERT( xform.Size() == 16, "" );
+			PR_ASSERT( xform.IsArray() );
+			PR_ASSERT( xform.Size() == 16 );
 
 			glm::mat4 m;
 			for ( rapidjson::SizeType i = 0; i < xform.Size(); i++ )
 			{
-				PR_ASSERT( xform[i].IsNumber(), "" );
+				PR_ASSERT( xform[i].IsNumber() );
 				glm::value_ptr( m )[i] = xform[i].GetFloat();
 			}
 			polygon.xform = m;
 		}
 
-		PR_ASSERT( d.HasMember( "Points" ), "" );
+		PR_ASSERT( d.HasMember( "Points" ) );
 		const rapidjson::Value& Points = d["Points"];
-		PR_ASSERT( Points.IsObject(), "" );
+		PR_ASSERT( Points.IsObject() );
 		{
-			PR_ASSERT( Points.HasMember( "P" ), "" );
+			PR_ASSERT( Points.HasMember( "P" ) );
 			const rapidjson::Value& P = Points["P"];
-			PR_ASSERT( P.IsArray(), "" );
-			PR_ASSERT( P.Size() % 3 == 0, "" ); // xyz
+			PR_ASSERT( P.IsArray() );
+			PR_ASSERT( P.Size() % 3 == 0 ); // xyz
 			polygon.P.reserve( P.Size() / 3 );	// xyz
 			for ( rapidjson::SizeType i = 0; i < P.Size(); i += 3 )
 			{
-				PR_ASSERT( P[i].IsNumber(), "" );
-				PR_ASSERT( P[i + 1].IsNumber(), "" );
-				PR_ASSERT( P[i + 2].IsNumber(), "" );
+				PR_ASSERT( P[i].IsNumber() );
+				PR_ASSERT( P[i + 1].IsNumber() );
+				PR_ASSERT( P[i + 2].IsNumber() );
 				float x = P[i].GetFloat();
 				float y = P[i + 1].GetFloat();
 				float z = P[i + 2].GetFloat();
@@ -84,17 +84,17 @@ int main()
 		}
 
 		const rapidjson::Value& Vertices = d["Vertices"];
-		PR_ASSERT( Vertices.IsObject(), "" );
+		PR_ASSERT( Vertices.IsObject() );
 		{
-			PR_ASSERT( Vertices.HasMember( "Point Num" ), "" );
+			PR_ASSERT( Vertices.HasMember( "Point Num" ) );
 			const rapidjson::Value& PointNum = Vertices["Point Num"];
-			PR_ASSERT( PointNum.IsArray(), "" );
-			PR_ASSERT( PointNum.Size() % 3 == 0, "" ); // Triangle
+			PR_ASSERT( PointNum.IsArray() );
+			PR_ASSERT( PointNum.Size() % 3 == 0 ); // Triangle
 
 			polygon.indices.reserve( PointNum.Size() );
 			for ( rapidjson::SizeType i = 0; i < PointNum.Size(); i++ )
 			{
-				PR_ASSERT( PointNum[i].IsNumber(), "" );
+				PR_ASSERT( PointNum[i].IsNumber() );
 				polygon.indices.push_back( PointNum[i].GetInt() );
 			}
 		}
