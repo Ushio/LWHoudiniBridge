@@ -30,16 +30,23 @@ def exportObjGeometry(node):
 
     # 'triangles'
     # traverse points
-    points = []
-    for point in rGeom.points():
-        p = point.position()
-        points.append(p.x())
-        points.append(p.y())
-        points.append(p.z())
+    # points = []
+    # for point in rGeom.points():
+    #     p = point.position()
+    #     points.append(p.x())
+    #     points.append(p.y())
+    #     points.append(p.z())
 
-    Points = {
-        'P' : points
-    }
+    # Get Points Attributes
+    Points = {}
+    
+    for point in rGeom.pointAttribs():
+        # https://www.sidefx.com/docs/houdini/hom/hou/attribData.html
+        if point.dataType() == hou.attribData.Float:
+            values = rGeom.pointFloatAttribValues(point.name())
+            Points[point.name()] = values
+        print('    PointAttrib: ' + point.name())
+
     data['Points'] = Points
 
     # traverse primitives
@@ -56,6 +63,15 @@ def exportObjGeometry(node):
     Vertices = {
         'Point Num' : PointNum
     }
+
+    # Get Vertices Attributes
+    for vert in rGeom.vertexAttribs():
+        # https://www.sidefx.com/docs/houdini/hom/hou/attribData.html
+        if vert.dataType() == hou.attribData.Float:
+            values = rGeom.vertexFloatAttribValues(vert.name())
+            Vertices[vert.name()] = values
+        print('    VertAttrib: ' + vert.name())
+
     data['Vertices'] = Vertices
 
     if skippedPrimitive != 0:

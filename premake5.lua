@@ -20,7 +20,7 @@ project "main"
     flags { "MultiProcessorCompile", "NoPCH" }
 
     -- Src
-    files { "main.cpp" }
+    files { "main.cpp", "lwHoudiniLoader.hpp" }
 
     -- rapidjson
     includedirs { "libs/rapidjson/include" }
